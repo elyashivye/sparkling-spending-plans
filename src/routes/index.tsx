@@ -256,7 +256,7 @@ function DesktopTopBar() {
       </div>
       <div className="min-w-0 text-center">
         <h1 className="truncate text-2xl font-extrabold">ברוך שובך, משפחת לוי ☀️</h1>
-        <p className="text-sm text-muted-foreground">יום שני, 20 במאי 2024</p>
+        <p className="text-sm text-muted-foreground">{bothDates()}</p>
       </div>
       <div />
     </header>
@@ -385,7 +385,7 @@ function FreeMoneyCard() {
         <img src={houseImg} alt="בית" width={300} height={300} className="h-auto w-full" />
         <div className="min-w-0 text-left">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <CalendarDays className="h-4 w-4" /><span>מצב החודש • מאי 2024</span>
+            <CalendarDays className="h-4 w-4" /><span>מצב החודש • {gregorianMonth()} • {hebrewMonth()}</span>
           </div>
           <h2 className="mt-2 text-base font-semibold text-foreground/80">כסף חופשי החודש</h2>
           <div className="mt-1 flex items-baseline gap-2">
@@ -560,7 +560,7 @@ function ForecastCard() {
       <div className="flex items-center justify-between">
         <h3 className="text-base font-bold text-primary">תזרים החודש <TrendingUp className="inline h-4 w-4" /></h3>
         <button className="flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-foreground/70">
-          מאי 2024 <ChevronDown className="h-3 w-3" />
+          {gregorianMonth()} <ChevronDown className="h-3 w-3" />
         </button>
       </div>
       <div className="mt-3 flex items-baseline gap-2">
