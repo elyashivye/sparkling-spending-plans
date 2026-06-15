@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { bothDates, hebrewMonth, gregorianMonth } from "@/lib/hebrew-date";
 import {
   Bell,
   Menu,
@@ -86,17 +87,17 @@ const insights = [
 ];
 
 const navItems = [
-  { label: "בית", Icon: Home, active: true },
-  { label: "הוצאות", Icon: Receipt },
-  { label: "הכנסות", Icon: ArrowUpCircle },
-  { label: "תקציבים", Icon: Target },
-  { label: "תזרים", Icon: TrendingUp },
-  { label: "יעדים וחסכונות", Icon: Heart },
-  { label: "מנויים וקבועים", Icon: ClipboardList },
-  { label: "דוחות", Icon: BarChart3 },
-  { label: "תובנות", Icon: Lightbulb },
-  { label: "הגדרות", Icon: Settings },
-];
+  { label: "בית", to: "/", Icon: Home, active: true },
+  { label: "הוצאות", to: "/expenses", Icon: Receipt },
+  { label: "הכנסות", to: "/income", Icon: ArrowUpCircle },
+  { label: "תקציבים", to: "/budgets", Icon: Target },
+  { label: "תזרים", to: "/cashflow", Icon: TrendingUp },
+  { label: "יעדים וחסכונות", to: "/goals", Icon: Heart },
+  { label: "מנויים וקבועים", to: "/subscriptions", Icon: ClipboardList },
+  { label: "דוחות", to: "/reports", Icon: BarChart3 },
+  { label: "תובנות", to: "/insights", Icon: Lightbulb },
+  { label: "הגדרות", to: "/settings", Icon: Settings },
+] as const;
 
 function nf(n: number) {
   return n.toLocaleString("he-IL");
@@ -171,27 +172,31 @@ function MobileTopBar() {
 
 function MobileBottomNav() {
   const items = [
-    { label: "הכנסות", Icon: Wallet },
-    { label: "הוצאות", Icon: Receipt },
-    { label: "בית", Icon: Home, active: true },
-    { label: "דוחות", Icon: BarChart3 },
-    { label: "יעדים", Icon: Target },
-  ];
+    { label: "הכנסות", to: "/income", Icon: Wallet },
+    { label: "הוצאות", to: "/expenses", Icon: Receipt },
+    { label: "בית", to: "/", Icon: Home, active: true },
+    { label: "דוחות", to: "/reports", Icon: BarChart3 },
+    { label: "יעדים", to: "/goals", Icon: Target },
+  ] as const;
   return (
     <nav className="fixed inset-x-0 bottom-0 z-30 lg:hidden">
       <div className="mx-auto max-w-[600px] px-4 pb-3">
         <div className="rounded-t-3xl bg-card pt-3 pb-2 shadow-[0_-10px_30px_-10px_oklch(0.5_0.1_270/0.15)]">
           <div className="grid grid-cols-5 items-end">
             {items.map((it, i) => (
-              <div key={it.label} className="flex flex-col items-center gap-1 text-xs">
-                {i === 2 ? <div className="h-6" /> : (
+              <Link key={it.to} to={it.to} className="flex flex-col items-center gap-1 text-xs">
+                {i === 2 ? (
                   <>
-                    <it.Icon className={`h-5 w-5 ${it.active ? "text-primary" : "text-muted-foreground"}`} />
-                    <span className={it.active ? "font-bold text-primary" : "text-muted-foreground"}>{it.label}</span>
+                    <div className="h-6" />
+                    <span className="mt-1 font-bold text-primary">{it.label}</span>
+                  </>
+                ) : (
+                  <>
+                    <it.Icon className={`h-5 w-5 ${"active" in it ? "text-primary" : "text-muted-foreground"}`} />
+                    <span className={"active" in it ? "font-bold text-primary" : "text-muted-foreground"}>{it.label}</span>
                   </>
                 )}
-                {i === 2 && <span className="mt-1 font-bold text-primary">{it.label}</span>}
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -212,13 +217,12 @@ function Sidebar() {
       </div>
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => (
-          <a key={item.label} href="#"
-            className={`flex items-center justify-between gap-3 rounded-2xl px-4 py-2.5 text-sm font-semibold transition ${
-              item.active ? "bg-primary-soft text-primary" : "text-foreground/70 hover:bg-muted"
-            }`}>
+          <Link key={item.to} to={item.to}
+            activeOptions={{ exact: true }}
+            className="flex items-center justify-between gap-3 rounded-2xl px-4 py-2.5 text-sm font-semibold transition text-foreground/70 hover:bg-muted data-[status=active]:bg-primary-soft data-[status=active]:text-primary">
             <span>{item.label}</span>
             <item.Icon className="h-4 w-4" />
-          </a>
+          </Link>
         ))}
       </nav>
       <div className="m-4 rounded-2xl bg-primary-soft p-4 text-center">
