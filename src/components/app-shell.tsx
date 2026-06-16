@@ -147,6 +147,7 @@ function DesktopTopBar({ title, subtitle }: { title: string; subtitle?: string }
 }
 
 function MobileTopBar({ title, subtitle }: { title: string; subtitle?: string }) {
+  const extras = navItems.filter((n) => !mobileBottomTos.has(n.to));
   return (
     <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
       <button className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-card shadow-[var(--shadow-card)] relative">
@@ -157,9 +158,37 @@ function MobileTopBar({ title, subtitle }: { title: string; subtitle?: string })
         <h1 className="truncate text-lg font-extrabold">{title}</h1>
         <p className="truncate text-[11px] text-muted-foreground">{subtitle ?? bothDates()}</p>
       </div>
-      <button className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-card shadow-[var(--shadow-card)]">
-        <Menu className="h-5 w-5 text-foreground/70" />
-      </button>
+      <Sheet>
+        <SheetTrigger asChild>
+          <button className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-card shadow-[var(--shadow-card)]">
+            <Menu className="h-5 w-5 text-foreground/70" />
+          </button>
+        </SheetTrigger>
+        <SheetContent side="right" className="w-[88%] max-w-[360px] p-0 flex flex-col">
+          <SheetHeader className="border-b border-border px-5 py-4 text-right">
+            <SheetTitle className="flex items-center gap-2 text-base font-extrabold">
+              <div className="grid h-9 w-9 place-items-center rounded-2xl bg-primary-soft">
+                <WalletCards className="h-4 w-4 text-primary" />
+              </div>
+              עוד אפשרויות
+            </SheetTitle>
+          </SheetHeader>
+          <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-1">
+            {extras.map((item) => (
+              <Link key={item.to} to={item.to}
+                activeOptions={{ exact: true }}
+                className="flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-foreground/75 hover:bg-muted data-[status=active]:bg-primary-soft data-[status=active]:text-primary">
+                <span>{item.label}</span>
+                <item.Icon className="h-4 w-4" />
+              </Link>
+            ))}
+          </nav>
+          <div className="m-4 rounded-2xl bg-primary-soft p-4 text-center">
+            <div className="text-sm font-bold text-primary">כל הכבוד! 🎉</div>
+            <p className="mt-1 text-xs text-foreground/70">עמדתם בתקציב 3 חודשים ברצף</p>
+          </div>
+        </SheetContent>
+      </Sheet>
     </header>
   );
 }
