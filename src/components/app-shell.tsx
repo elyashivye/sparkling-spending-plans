@@ -22,6 +22,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import coupleImg from "@/assets/couple-avatar.png";
 import { bothDates } from "@/lib/hebrew-date";
 
