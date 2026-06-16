@@ -16,7 +16,7 @@ import {
   TrendingUp,
   Fuel,
   Coffee,
-  Plus,
+  
   ChevronLeft,
   ChevronDown,
   BarChart3,
@@ -32,9 +32,9 @@ import {
   Heart,
   Sparkles,
   Zap,
-  X,
 } from "lucide-react";
-import { useState } from "react";
+
+import { FloatingAdd } from "@/components/quick-add";
 import houseImg from "@/assets/house-3d.png";
 import suitcaseImg from "@/assets/suitcase-3d.png";
 import coupleImg from "@/assets/couple-avatar.png";
@@ -105,7 +105,6 @@ function nf(n: number) {
 }
 
 function Index() {
-  const [quickAdd, setQuickAdd] = useState(false);
   return (
     <div className="min-h-screen bg-background">
       {/* Mobile layout */}
@@ -125,7 +124,7 @@ function Index() {
       </div>
 
       {/* Floating + button - both layouts */}
-      <FloatingAdd open={quickAdd} setOpen={setQuickAdd} />
+      <FloatingAdd />
     </div>
   );
 }
@@ -189,7 +188,7 @@ function MobileTopBar() {
             </div>
           </div>
           <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-1">
-            {navItems.map((item) => (
+            {extras.map((item) => (
               <Link key={item.to} to={item.to}
                 activeOptions={{ exact: true }}
                 className="flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-foreground/75 hover:bg-muted data-[status=active]:bg-primary-soft data-[status=active]:text-primary">
@@ -202,8 +201,6 @@ function MobileTopBar() {
             <div className="text-sm font-bold text-primary">כל הכבוד! 🎉</div>
             <p className="mt-1 text-xs text-foreground/70">עמדתם בתקציב 3 חודשים ברצף</p>
           </div>
-          {/* keep extras referenced for future use */}
-          <span className="sr-only">{extras.length}</span>
         </SheetContent>
       </Sheet>
     </header>
@@ -248,7 +245,7 @@ function MobileBottomNav() {
 /* =================== DESKTOP =================== */
 function Sidebar() {
   return (
-    <aside className="w-64 shrink-0 border-l border-border bg-card flex flex-col">
+    <aside className="sticky top-0 h-screen w-64 shrink-0 border-l border-border bg-card flex flex-col">
       <div className="flex items-center gap-2 px-6 py-5 border-b border-border">
         <div className="grid h-10 w-10 place-items-center rounded-2xl bg-primary-soft">
           <WalletCards className="h-5 w-5 text-primary" />
@@ -705,51 +702,3 @@ function SectionHeader({ title, hideAction }: { title: string; hideAction?: bool
   );
 }
 
-/* ---------- Floating + Button (both layouts) ---------- */
-function FloatingAdd({ open, setOpen }: { open: boolean; setOpen: (b: boolean) => void }) {
-  return (
-    <>
-      {open && (
-        <div className="fixed inset-0 z-40 bg-foreground/20 backdrop-blur-sm" onClick={() => setOpen(false)} />
-      )}
-      <div className="fixed left-1/2 bottom-6 z-50 -translate-x-1/2 lg:bottom-8">
-        {open && (
-          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-[320px] rounded-3xl bg-card p-5 shadow-2xl">
-            <div className="mb-3 flex items-center justify-between">
-              <h4 className="text-sm font-bold flex items-center gap-1">
-                <Zap className="h-4 w-4 text-primary" /> הוספת הוצאה מהירה
-              </h4>
-            </div>
-            <input
-              type="text"
-              placeholder="0"
-              defaultValue="120"
-              className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-right text-lg font-bold focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-            <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
-              <button className="flex items-center justify-center gap-1 rounded-xl border border-border bg-background px-2 py-2 font-semibold">
-                <span>הערה</span>
-              </button>
-              <button className="flex items-center justify-center gap-1 rounded-xl border border-border bg-background px-2 py-2 font-semibold">
-                <span>סופר וקניות</span>
-              </button>
-              <button className="flex items-center justify-center gap-1 rounded-xl border border-border bg-background px-2 py-2 font-semibold">
-                <span>כרטיס אשראי</span>
-              </button>
-            </div>
-            <button className="mt-3 w-full rounded-xl bg-primary py-2.5 text-sm font-bold text-primary-foreground">
-              שמור הוצאה
-            </button>
-          </div>
-        )}
-        <button
-          onClick={() => setOpen(!open)}
-          className="grid h-16 w-16 place-items-center rounded-full bg-primary text-primary-foreground shadow-2xl ring-4 ring-background transition hover:scale-105"
-          aria-label="הוסף הוצאה"
-        >
-          {open ? <X className="h-7 w-7" /> : <Plus className="h-8 w-8" />}
-        </button>
-      </div>
-    </>
-  );
-}
