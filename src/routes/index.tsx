@@ -246,7 +246,7 @@ function MobileBottomNav() {
 /* =================== DESKTOP =================== */
 function Sidebar() {
   return (
-    <aside className="w-64 shrink-0 border-l border-border bg-card flex flex-col">
+    <aside className="sticky top-0 h-screen w-64 shrink-0 border-l border-border bg-card flex flex-col">
       <div className="flex items-center gap-2 px-6 py-5 border-b border-border">
         <div className="grid h-10 w-10 place-items-center rounded-2xl bg-primary-soft">
           <WalletCards className="h-5 w-5 text-primary" />
