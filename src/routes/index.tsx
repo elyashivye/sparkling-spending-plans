@@ -105,7 +105,6 @@ function nf(n: number) {
 }
 
 function Index() {
-  const [quickAdd, setQuickAdd] = useState(false);
   return (
     <div className="min-h-screen bg-background">
       {/* Mobile layout */}
@@ -125,7 +124,7 @@ function Index() {
       </div>
 
       {/* Floating + button - both layouts */}
-      <FloatingAdd open={quickAdd} setOpen={setQuickAdd} />
+      <FloatingAdd />
     </div>
   );
 }
