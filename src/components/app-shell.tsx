@@ -60,7 +60,6 @@ export function AppShell({
   children: ReactNode;
   mobileChildren?: ReactNode;
 }) {
-  const [quickAdd, setQuickAdd] = useState(false);
   return (
     <div className="min-h-screen bg-background">
       {/* Mobile */}
