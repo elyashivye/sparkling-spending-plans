@@ -413,14 +413,6 @@ function CuteBg() {
       <div className="absolute -top-16 -right-10 h-48 w-48 rounded-full bg-primary-soft opacity-70 blur-2xl" />
       <div className="absolute -bottom-16 -left-10 h-52 w-52 rounded-full bg-info-soft opacity-60 blur-2xl" />
       <div className="absolute top-6 left-10 h-16 w-16 rounded-full bg-warning-soft opacity-60 blur-xl" />
-      <svg className="absolute inset-0 h-full w-full opacity-[0.22]" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="cute-dots" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1.4" fill="oklch(0.62 0.21 295)" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#cute-dots)" />
-      </svg>
     </div>
   );
 }
