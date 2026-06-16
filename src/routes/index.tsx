@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { bothDates, hebrewMonth, gregorianMonth } from "@/lib/hebrew-date";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import {
   Bell,
   Menu,
@@ -147,6 +148,8 @@ function MobileLayout() {
 }
 
 function MobileTopBar() {
+  const bottomTos = new Set(["/income", "/expenses", "/", "/reports", "/goals"]);
+  const extras = navItems.filter((n) => !bottomTos.has(n.to));
   return (
     <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
       <div className="flex items-center gap-2">
@@ -163,9 +166,46 @@ function MobileTopBar() {
           כיף לראות שאתם כאן שוב <span className="text-primary">💜</span>
         </p>
       </div>
-      <button className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-card shadow-[var(--shadow-card)]">
-        <Menu className="h-5 w-5 text-foreground/70" />
-      </button>
+      <Sheet>
+        <SheetTrigger asChild>
+          <button className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-card shadow-[var(--shadow-card)]">
+            <Menu className="h-5 w-5 text-foreground/70" />
+          </button>
+        </SheetTrigger>
+        <SheetContent side="right" className="w-[88%] max-w-[360px] p-0 flex flex-col">
+          <SheetHeader className="border-b border-border px-5 py-4 text-right">
+            <SheetTitle className="flex items-center gap-2 text-base font-extrabold">
+              <div className="grid h-9 w-9 place-items-center rounded-2xl bg-primary-soft">
+                <WalletCards className="h-4 w-4 text-primary" />
+              </div>
+              הכיס המשפחתי
+            </SheetTitle>
+          </SheetHeader>
+          <div className="flex items-center gap-3 border-b border-border px-5 py-4">
+            <img src={coupleImg} alt="" className="h-11 w-11 rounded-full object-cover" />
+            <div className="leading-tight">
+              <div className="text-[11px] text-muted-foreground">משפחת</div>
+              <div className="text-sm font-bold">משפחת לוי</div>
+            </div>
+          </div>
+          <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-1">
+            {navItems.map((item) => (
+              <Link key={item.to} to={item.to}
+                activeOptions={{ exact: true }}
+                className="flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-foreground/75 hover:bg-muted data-[status=active]:bg-primary-soft data-[status=active]:text-primary">
+                <span>{item.label}</span>
+                <item.Icon className="h-4 w-4" />
+              </Link>
+            ))}
+          </nav>
+          <div className="m-4 rounded-2xl bg-primary-soft p-4 text-center">
+            <div className="text-sm font-bold text-primary">כל הכבוד! 🎉</div>
+            <p className="mt-1 text-xs text-foreground/70">עמדתם בתקציב 3 חודשים ברצף</p>
+          </div>
+          {/* keep extras referenced for future use */}
+          <span className="sr-only">{extras.length}</span>
+        </SheetContent>
+      </Sheet>
     </header>
   );
 }
@@ -339,27 +379,49 @@ function HealthCard() {
 
 function FreeMoneyDesktop() {
   return (
-    <section className="rounded-3xl bg-card p-6 shadow-[var(--shadow-card)] h-full">
-      <div className="flex items-center justify-between">
-        <div className="grid h-12 w-12 place-items-center rounded-2xl bg-success-soft">
-          <Wallet className="h-6 w-6 text-success" />
-        </div>
+    <section className="relative overflow-hidden rounded-3xl bg-card p-6 shadow-[var(--shadow-card)] h-full">
+      <CuteBg />
+      <div className="relative grid grid-cols-[160px_minmax(0,1fr)_auto] items-center gap-4">
+        <img src={houseImg} alt="בית" width={300} height={300} className="h-32 w-auto drop-shadow-lg" />
         <div className="text-center">
           <h2 className="text-sm font-semibold text-foreground/70">כסף חופשי החודש</h2>
           <div className="mt-1 flex items-baseline justify-center gap-1.5">
-            <span className="text-4xl font-extrabold text-success">{nf(4880)}</span>
+            <span className="text-5xl font-extrabold text-success">{nf(4880)}</span>
             <span className="text-lg font-bold text-success/70">₪</span>
           </div>
+          <div className="mx-auto mt-2 h-1.5 w-32 rounded-full bg-success/30" />
+          <p className="mt-2 text-xs text-muted-foreground">מתוך {nf(18500)} ₪ הכנסות צפויות</p>
         </div>
-        <div className="w-12" />
+        <div className="grid h-12 w-12 place-items-center rounded-2xl bg-success-soft">
+          <Wallet className="h-6 w-6 text-success" />
+        </div>
       </div>
-      <div className="mt-6 grid grid-cols-4 gap-3 border-t border-border pt-5">
+      <div className="relative mt-6 grid grid-cols-4 gap-3 border-t border-border pt-5">
         <StatTile value={18500} label="הכנסות צפויות" color="text-success" Icon={PiggyBank} iconBg="bg-success-soft" iconColor="text-success" />
         <StatTile value={3200} label="הוצאות צפויות" color="text-warning" Icon={CalendarCheck} iconBg="bg-warning-soft" iconColor="text-warning" />
         <StatTile value={10420} label="הוצאות עד כה" color="text-info" Icon={WalletCards} iconBg="bg-info-soft" iconColor="text-info" />
         <StatTile value={4180} label="חסכון עד כה" color="text-primary" Icon={PiggyBank} iconBg="bg-primary-soft" iconColor="text-primary" />
       </div>
     </section>
+  );
+}
+
+/* Cute pastel decorative background for hero cards */
+function CuteBg() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl">
+      <div className="absolute -top-16 -right-10 h-48 w-48 rounded-full bg-primary-soft opacity-70 blur-2xl" />
+      <div className="absolute -bottom-16 -left-10 h-52 w-52 rounded-full bg-info-soft opacity-60 blur-2xl" />
+      <div className="absolute top-6 left-10 h-16 w-16 rounded-full bg-warning-soft opacity-60 blur-xl" />
+      <svg className="absolute inset-0 h-full w-full opacity-[0.22]" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="cute-dots" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1.4" fill="oklch(0.62 0.21 295)" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#cute-dots)" />
+      </svg>
+    </div>
   );
 }
 
@@ -380,8 +442,9 @@ function StatTile({ value, label, color, Icon, iconBg, iconColor }: {
 /* ---------- Free money mobile card ---------- */
 function FreeMoneyCard() {
   return (
-    <section className="overflow-hidden rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
-      <div className="grid grid-cols-[140px_minmax(0,1fr)] items-center gap-4">
+    <section className="relative overflow-hidden rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
+      <CuteBg />
+      <div className="relative grid grid-cols-[140px_minmax(0,1fr)] items-center gap-4">
         <img src={houseImg} alt="בית" width={300} height={300} className="h-auto w-full" />
         <div className="min-w-0 text-left">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -396,7 +459,7 @@ function FreeMoneyCard() {
           <p className="mt-3 text-xs text-muted-foreground">מתוך {nf(18500)} ₪ הכנסות צפויות</p>
         </div>
       </div>
-      <div className="mt-5 grid grid-cols-3 gap-3 border-t border-border pt-5">
+      <div className="relative mt-5 grid grid-cols-3 gap-3 border-t border-border pt-5">
         <Stat value={4180} label="חסכנו עד היום" color="text-primary" iconBg="bg-primary-soft" iconColor="text-primary" Icon={PiggyBank} />
         <Stat value={3200} label="הוצאות צפויות" color="text-warning" iconBg="bg-warning-soft" iconColor="text-warning" Icon={CalendarDays} />
         <Stat value={10420} label="הוצאות עד היום" color="text-info" iconBg="bg-info-soft" iconColor="text-info" Icon={Wallet} />
