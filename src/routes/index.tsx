@@ -189,7 +189,7 @@ function MobileTopBar() {
             </div>
           </div>
           <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-1">
-            {navItems.map((item) => (
+            {extras.map((item) => (
               <Link key={item.to} to={item.to}
                 activeOptions={{ exact: true }}
                 className="flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-foreground/75 hover:bg-muted data-[status=active]:bg-primary-soft data-[status=active]:text-primary">
@@ -202,8 +202,6 @@ function MobileTopBar() {
             <div className="text-sm font-bold text-primary">כל הכבוד! 🎉</div>
             <p className="mt-1 text-xs text-foreground/70">עמדתם בתקציב 3 חודשים ברצף</p>
           </div>
-          {/* keep extras referenced for future use */}
-          <span className="sr-only">{extras.length}</span>
         </SheetContent>
       </Sheet>
     </header>
