@@ -16,7 +16,7 @@ import {
   TrendingUp,
   Fuel,
   Coffee,
-  Plus,
+  
   ChevronLeft,
   ChevronDown,
   BarChart3,
