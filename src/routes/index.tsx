@@ -459,7 +459,7 @@ function FreeMoneyCard() {
           <p className="mt-3 text-xs text-muted-foreground">מתוך {nf(18500)} ₪ הכנסות צפויות</p>
         </div>
       </div>
-      <div className="mt-5 grid grid-cols-3 gap-3 border-t border-border pt-5">
+      <div className="relative mt-5 grid grid-cols-3 gap-3 border-t border-border pt-5">
         <Stat value={4180} label="חסכנו עד היום" color="text-primary" iconBg="bg-primary-soft" iconColor="text-primary" Icon={PiggyBank} />
         <Stat value={3200} label="הוצאות צפויות" color="text-warning" iconBg="bg-warning-soft" iconColor="text-warning" Icon={CalendarDays} />
         <Stat value={10420} label="הוצאות עד היום" color="text-info" iconBg="bg-info-soft" iconColor="text-info" Icon={Wallet} />
