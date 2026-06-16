@@ -78,7 +78,7 @@ export function AppShell({
           <div className="px-8 py-6">{children}</div>
         </main>
       </div>
-      <FloatingAdd open={quickAdd} setOpen={setQuickAdd} />
+      <FloatingAdd />
     </div>
   );
 }
