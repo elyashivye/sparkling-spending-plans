@@ -32,7 +32,6 @@ import {
   Heart,
   Sparkles,
   Zap,
-  X,
 } from "lucide-react";
 
 import { FloatingAdd } from "@/components/quick-add";
