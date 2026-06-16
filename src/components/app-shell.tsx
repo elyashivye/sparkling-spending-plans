@@ -86,14 +86,14 @@ export function AppShell({
 function Sidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   return (
-    <aside className="w-64 shrink-0 border-l border-border bg-card flex flex-col">
-      <div className="flex items-center gap-2 px-6 py-5 border-b border-border">
+    <aside className="sticky top-0 h-screen w-64 shrink-0 border-l border-border bg-card flex flex-col">
+      <div className="flex items-center gap-2 px-6 py-5 border-b border-border shrink-0">
         <div className="grid h-10 w-10 place-items-center rounded-2xl bg-primary-soft">
           <WalletCards className="h-5 w-5 text-primary" />
         </div>
         <h2 className="text-lg font-extrabold">הכיס המשפחתי</h2>
       </div>
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      <nav className="flex-1 min-h-0 px-3 py-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const active = pathname === item.to;
           return (
@@ -110,13 +110,15 @@ function Sidebar() {
           );
         })}
       </nav>
-      <div className="m-4 rounded-2xl bg-primary-soft p-4 text-center">
+      <div className="m-4 shrink-0 rounded-2xl bg-primary-soft p-4 text-center">
         <div className="text-sm font-bold text-primary">כל הכבוד! 🎉</div>
         <p className="mt-1 text-xs text-foreground/70">עמדתם בתקציב 3 חודשים ברצף</p>
       </div>
     </aside>
   );
 }
+
+export const mobileBottomTos = new Set(["/income", "/expenses", "/", "/reports", "/goals"]);
 
 function DesktopTopBar({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
