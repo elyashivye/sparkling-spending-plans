@@ -442,8 +442,9 @@ function StatTile({ value, label, color, Icon, iconBg, iconColor }: {
 /* ---------- Free money mobile card ---------- */
 function FreeMoneyCard() {
   return (
-    <section className="overflow-hidden rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
-      <div className="grid grid-cols-[140px_minmax(0,1fr)] items-center gap-4">
+    <section className="relative overflow-hidden rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
+      <CuteBg />
+      <div className="relative grid grid-cols-[140px_minmax(0,1fr)] items-center gap-4">
         <img src={houseImg} alt="בית" width={300} height={300} className="h-auto w-full" />
         <div className="min-w-0 text-left">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
