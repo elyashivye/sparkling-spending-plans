@@ -148,15 +148,12 @@ function MobileLayout() {
 }
 
 function MobileTopBar() {
-  const bottomTos = new Set(["/income", "/expenses", "/", "/reports", "/goals"]);
+  const bottomTos = new Set(["/income", "/expenses", "/reports", "/goals"]);
   const extras = navItems.filter((n) => !bottomTos.has(n.to));
   return (
     <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
       <div className="flex items-center gap-2">
-        <button className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-card shadow-[var(--shadow-card)] relative">
-          <Bell className="h-5 w-5 text-foreground/70" />
-          <span className="absolute top-2 left-2 h-2 w-2 rounded-full bg-destructive" />
-        </button>
+        <NotificationsBell />
         <img src={coupleImg} alt="משפחת לוי" width={44} height={44}
           className="h-11 w-11 shrink-0 rounded-full object-cover ring-2 ring-card shadow-[var(--shadow-card)]" />
       </div>
