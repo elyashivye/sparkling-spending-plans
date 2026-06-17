@@ -145,7 +145,7 @@ function DesktopTopBar({ title, subtitle }: { title: string; subtitle?: string }
 }
 
 function MobileTopBar({ title, subtitle }: { title: string; subtitle?: string }) {
-  const extras = navItems.filter((n) => !mobileBottomTos.has(n.to));
+  const extras = navItems.filter((n) => n.to === "/" || !mobileBottomTos.has(n.to));
   return (
     <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
       <NotificationsBell />
