@@ -297,7 +297,7 @@ function DesktopTopBar() {
   );
 }
 
-function IconBtn({ Icon, dot }: { Icon: typeof Bell; dot?: boolean }) {
+function IconBtn({ Icon, dot }: { Icon: typeof Menu; dot?: boolean }) {
   return (
     <button className="relative grid h-10 w-10 place-items-center rounded-xl text-foreground/60 hover:bg-muted">
       <Icon className="h-5 w-5" />
