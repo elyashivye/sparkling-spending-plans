@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { bothDates, hebrewMonth, gregorianMonth } from "@/lib/hebrew-date";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import {
-  Bell,
   Menu,
   Wallet,
   PiggyBank,
@@ -35,6 +34,7 @@ import {
 } from "lucide-react";
 
 import { FloatingAdd } from "@/components/quick-add";
+import { NotificationsBell } from "@/components/notifications";
 import houseImg from "@/assets/house-3d.png";
 import suitcaseImg from "@/assets/suitcase-3d.png";
 import coupleImg from "@/assets/couple-avatar.png";
@@ -147,15 +147,12 @@ function MobileLayout() {
 }
 
 function MobileTopBar() {
-  const bottomTos = new Set(["/income", "/expenses", "/", "/reports", "/goals"]);
+  const bottomTos = new Set(["/income", "/expenses", "/reports", "/goals"]);
   const extras = navItems.filter((n) => !bottomTos.has(n.to));
   return (
     <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
       <div className="flex items-center gap-2">
-        <button className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-card shadow-[var(--shadow-card)] relative">
-          <Bell className="h-5 w-5 text-foreground/70" />
-          <span className="absolute top-2 left-2 h-2 w-2 rounded-full bg-destructive" />
-        </button>
+        <NotificationsBell />
         <img src={coupleImg} alt="משפחת לוי" width={44} height={44}
           className="h-11 w-11 shrink-0 rounded-full object-cover ring-2 ring-card shadow-[var(--shadow-card)]" />
       </div>
@@ -286,7 +283,7 @@ function DesktopTopBar() {
           </button>
         </div>
         <div className="mr-4 flex items-center gap-2">
-          <IconBtn Icon={Bell} dot />
+          <NotificationsBell />
           <IconBtn Icon={HelpCircle} />
           <IconBtn Icon={Settings} />
         </div>
@@ -300,7 +297,7 @@ function DesktopTopBar() {
   );
 }
 
-function IconBtn({ Icon, dot }: { Icon: typeof Bell; dot?: boolean }) {
+function IconBtn({ Icon, dot }: { Icon: typeof Menu; dot?: boolean }) {
   return (
     <button className="relative grid h-10 w-10 place-items-center rounded-xl text-foreground/60 hover:bg-muted">
       <Icon className="h-5 w-5" />
