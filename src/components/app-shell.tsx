@@ -148,10 +148,7 @@ function MobileTopBar({ title, subtitle }: { title: string; subtitle?: string })
   const extras = navItems.filter((n) => !mobileBottomTos.has(n.to));
   return (
     <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
-      <button className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-card shadow-[var(--shadow-card)] relative">
-        <Bell className="h-5 w-5 text-foreground/70" />
-        <span className="absolute top-2 left-2 h-2 w-2 rounded-full bg-destructive" />
-      </button>
+      <NotificationsBell />
       <div className="min-w-0 text-center">
         <h1 className="truncate text-lg font-extrabold">{title}</h1>
         <p className="truncate text-[11px] text-muted-foreground">{subtitle ?? bothDates()}</p>
