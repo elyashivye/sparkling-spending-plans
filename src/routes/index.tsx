@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 
 import { FloatingAdd } from "@/components/quick-add";
+import { NotificationsBell } from "@/components/notifications";
 import houseImg from "@/assets/house-3d.png";
 import suitcaseImg from "@/assets/suitcase-3d.png";
 import coupleImg from "@/assets/couple-avatar.png";
