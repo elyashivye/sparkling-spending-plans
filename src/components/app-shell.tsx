@@ -130,7 +130,7 @@ function DesktopTopBar({ title, subtitle }: { title: string; subtitle?: string }
           </button>
         </div>
         <div className="mr-4 flex items-center gap-2">
-          <IconBtn Icon={Bell} dot />
+          <NotificationsBell />
           <IconBtn Icon={HelpCircle} />
           <IconBtn Icon={Settings} />
         </div>
