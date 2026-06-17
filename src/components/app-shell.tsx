@@ -1,6 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-  Bell,
   Menu,
   Wallet,
   Home,
@@ -20,6 +19,7 @@ import {
 } from "lucide-react";
 import { type ReactNode } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { NotificationsBell } from "@/components/notifications";
 import coupleImg from "@/assets/couple-avatar.png";
 import { bothDates } from "@/lib/hebrew-date";
 import { FloatingAdd } from "@/components/quick-add";
