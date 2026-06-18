@@ -196,12 +196,12 @@ function BudgetsPage() {
 }
 
 
-/* ===== Category detail with double-confirm edit ===== */
-function CategoryDetailDialog({
-  category, onClose, onUpdate, onDelete,
+/* ===== Inline category detail (part of the page, not a popup) ===== */
+function CategoryDetailView({
+  category, onBack, onUpdate, onDelete,
 }: {
-  category: B | null;
-  onClose: () => void;
+  category: B;
+  onBack: () => void;
   onUpdate: (label: string, n: number) => void;
   onDelete: (label: string) => void;
 }) {
@@ -210,116 +210,105 @@ function CategoryDetailDialog({
   const [confirmingEdit, setConfirmingEdit] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
-  const open = !!category;
   const b = category;
+  const pct = Math.min(100, Math.round((b.spent / b.budget) * 100));
+  const over = b.spent > b.budget;
+  const diff = b.budget - b.spent;
 
-  const stop = () => {
-    setEditing(false);
-    setDraft("");
-    onClose();
-  };
-
-  const startEdit = () => {
-    if (!b) return;
-    setDraft(String(b.budget));
-    setEditing(true);
-  };
-
+  const startEdit = () => { setDraft(String(b.budget)); setEditing(true); };
   const parsedDraft = Number(draft);
   const draftValid = Number.isFinite(parsedDraft) && parsedDraft > 0;
 
   return (
-    <>
-      <Dialog open={open} onOpenChange={(o) => !o && stop()}>
-        <DialogContent className="max-w-lg rounded-3xl p-0 overflow-hidden gap-0 max-h-[90vh] flex flex-col" dir="rtl">
-          {b && (
-            <>
-              <div className={`${b.bg} px-6 pt-8 pb-6 text-center relative shrink-0`}>
-                <button
-                  onClick={stop}
-                  className="absolute top-3 right-3 grid h-9 w-9 place-items-center rounded-xl text-foreground/60 hover:bg-card/60"
-                  aria-label="חזור"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
-                <div className={`mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-card shadow-[var(--shadow-card)]`}>
-                  <b.Icon className={`h-8 w-8 ${b.ic}`} />
-                </div>
-                <DialogTitle className="mt-3 text-xl font-extrabold">{b.label}</DialogTitle>
-                <DialogDescription className="text-xs text-foreground/70">
-                  פירוט תקציב הקטגוריה לחודש {hebrewMonth()}
-                </DialogDescription>
-              </div>
+    <div className="space-y-6">
+      <button
+        onClick={onBack}
+        className="inline-flex items-center gap-1.5 rounded-xl px-2 py-1 text-sm font-semibold text-muted-foreground hover:text-foreground"
+      >
+        <ChevronLeft className="h-4 w-4" /> חזרה לתקציבים
+      </button>
 
-              <div className="space-y-4 px-6 py-5 overflow-y-auto">
-                <div className="grid grid-cols-3 gap-2 text-center">
-                  <Stat label="תקציב" value={shekel(b.budget)} />
-                  <Stat label="הוצאה" value={shekel(b.spent)} />
-                  <Stat label={b.spent > b.budget ? "חריגה" : "נשאר"} value={shekel(Math.abs(b.budget - b.spent))} tone={b.spent > b.budget ? "destructive" : "success"} />
-                </div>
+      <Section>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className={`grid h-14 w-14 place-items-center rounded-2xl ${b.bg}`}>
+              <b.Icon className={`h-7 w-7 ${b.ic}`} />
+            </div>
+            <div>
+              <div className="text-lg font-extrabold">{b.label}</div>
+              <div className="text-xs text-muted-foreground">{shekel(b.spent)} מתוך {shekel(b.budget)} • {hebrewMonth()}</div>
+            </div>
+          </div>
+          {over ? <Pill tone="destructive">חריגה {shekel(Math.abs(diff))}</Pill> : <Pill tone="success">נשארו {shekel(diff)}</Pill>}
+        </div>
 
-                {!editing ? (
-                  <div className="flex gap-2">
-                    <button
-                      onClick={startEdit}
-                      className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-primary py-2.5 text-sm font-bold text-primary-foreground hover:opacity-90"
-                    >
-                      <Pencil className="h-4 w-4" /> שינוי תקציב
-                    </button>
-                    <button
-                      onClick={() => setConfirmingDelete(true)}
-                      className="grid h-11 w-11 place-items-center rounded-2xl bg-pink-soft text-destructive hover:opacity-90"
-                      aria-label="מחק קטגוריה"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-2 rounded-2xl border border-border bg-muted/30 p-3">
-                    <label className="text-xs font-semibold text-foreground/70">תקציב חודשי חדש (₪)</label>
-                    <input
-                      type="text"
-                      inputMode="decimal"
-                      value={draft}
-                      onChange={(e) => setDraft(e.target.value.replace(/[^\d.]/g, ""))}
-                      className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-right text-lg font-bold focus:outline-none focus:ring-2 focus:ring-primary"
-                      autoFocus
-                    />
-                    <div className="flex gap-2 pt-1">
-                      <button
-                        onClick={() => setEditing(false)}
-                        className="flex-1 rounded-xl border border-border bg-card py-2 text-xs font-bold"
-                      >
-                        ביטול
-                      </button>
-                      <button
-                        disabled={!draftValid || parsedDraft === b.budget}
-                        onClick={() => setConfirmingEdit(true)}
-                        className="flex-1 rounded-xl bg-primary py-2 text-xs font-bold text-primary-foreground disabled:opacity-40"
-                      >
-                        שמור
-                      </button>
-                    </div>
-                  </div>
-                )}
+        <div className="mt-5 h-2.5 overflow-hidden rounded-full bg-muted">
+          <div className={`h-full rounded-full ${b.color}`} style={{ width: `${pct}%` }} />
+        </div>
+        <div className="mt-2 flex justify-between text-xs text-muted-foreground">
+          <span>{pct}% מהתקציב</span>
+          <span>{shekel(Math.max(0, diff))} פנויים</span>
+        </div>
 
-                <CategoryExpenses category={b} />
-              </div>
-            </>
-          )}
-          <DialogFooter className="hidden" />
-        </DialogContent>
-      </Dialog>
+        <div className="mt-5 grid grid-cols-3 gap-2 text-center">
+          <Stat label="תקציב" value={shekel(b.budget)} />
+          <Stat label="הוצאה" value={shekel(b.spent)} />
+          <Stat label={over ? "חריגה" : "נשאר"} value={shekel(Math.abs(diff))} tone={over ? "destructive" : "success"} />
+        </div>
 
+        {!editing ? (
+          <div className="mt-5 flex gap-2">
+            <button
+              onClick={startEdit}
+              className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-primary py-2.5 text-sm font-bold text-primary-foreground hover:opacity-90"
+            >
+              <Pencil className="h-4 w-4" /> שינוי תקציב
+            </button>
+            <button
+              onClick={() => setConfirmingDelete(true)}
+              className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-4 py-2.5 text-sm font-bold text-destructive hover:bg-pink-soft"
+            >
+              <Trash2 className="h-4 w-4" /> מחיקה
+            </button>
+          </div>
+        ) : (
+          <div className="mt-5 space-y-2 rounded-2xl border border-border bg-muted/30 p-3">
+            <label className="text-xs font-semibold text-foreground/70">תקציב חודשי חדש (₪)</label>
+            <input
+              type="text"
+              inputMode="decimal"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value.replace(/[^\d.]/g, ""))}
+              className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-right text-lg font-bold focus:outline-none focus:ring-2 focus:ring-primary"
+              autoFocus
+            />
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={() => setEditing(false)}
+                className="flex-1 rounded-xl border border-border bg-card py-2 text-xs font-bold"
+              >
+                ביטול
+              </button>
+              <button
+                disabled={!draftValid || parsedDraft === b.budget}
+                onClick={() => setConfirmingEdit(true)}
+                className="flex-1 rounded-xl bg-primary py-2 text-xs font-bold text-primary-foreground disabled:opacity-40"
+              >
+                שמור
+              </button>
+            </div>
+          </div>
+        )}
+      </Section>
 
+      <CategoryExpenses category={b} />
 
-      {/* Double confirmation - edit */}
       <AlertDialog open={confirmingEdit} onOpenChange={setConfirmingEdit}>
         <AlertDialogContent dir="rtl" className="rounded-3xl">
           <AlertDialogHeader>
             <AlertDialogTitle>לאשר עדכון תקציב?</AlertDialogTitle>
             <AlertDialogDescription>
-              התקציב של "{b?.label}" ישתנה מ-{b && shekel(b.budget)} ל-{shekel(parsedDraft || 0)}.
+              התקציב של "{b.label}" ישתנה מ-{shekel(b.budget)} ל-{shekel(parsedDraft || 0)}.
               פעולה זו תשפיע על החישובים החודשיים.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -327,10 +316,9 @@ function CategoryDetailDialog({
             <AlertDialogCancel>ביטול</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
-                if (b && draftValid) onUpdate(b.label, parsedDraft);
+                if (draftValid) onUpdate(b.label, parsedDraft);
                 setConfirmingEdit(false);
                 setEditing(false);
-                onClose();
               }}
             >
               אשר עדכון
@@ -339,11 +327,10 @@ function CategoryDetailDialog({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Double confirmation - delete */}
       <AlertDialog open={confirmingDelete} onOpenChange={setConfirmingDelete}>
         <AlertDialogContent dir="rtl" className="rounded-3xl">
           <AlertDialogHeader>
-            <AlertDialogTitle>למחוק את "{b?.label}"?</AlertDialogTitle>
+            <AlertDialogTitle>למחוק את "{b.label}"?</AlertDialogTitle>
             <AlertDialogDescription>
               הקטגוריה תוסר מהרשימה. ההוצאות הקיימות יישמרו בהיסטוריה ללא שיוך לקטגוריה.
             </AlertDialogDescription>
@@ -353,9 +340,8 @@ function CategoryDetailDialog({
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => {
-                if (b) onDelete(b.label);
+                onDelete(b.label);
                 setConfirmingDelete(false);
-                onClose();
               }}
             >
               מחק
@@ -363,9 +349,10 @@ function CategoryDetailDialog({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   );
 }
+
 
 function Stat({ label, value, tone = "muted" }: { label: string; value: string; tone?: "muted" | "success" | "destructive" }) {
   const toneCls = tone === "success" ? "text-success" : tone === "destructive" ? "text-destructive" : "text-foreground";
