@@ -689,16 +689,17 @@ function InsightsCard() {
   );
 }
 
-function SectionHeader({ title, hideAction }: { title: string; hideAction?: boolean }) {
+function SectionHeader({ title, hideAction, to }: { title: string; hideAction?: boolean; to?: string }) {
   return (
     <div className="flex items-center justify-between">
       <h3 className="text-base font-bold sm:text-lg">{title}</h3>
-      {!hideAction && (
-        <button className="flex items-center gap-0.5 rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
+      {!hideAction && to && (
+        <Link to={to} className="flex items-center gap-0.5 rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
           <span>הצג הכל</span><ChevronLeft className="h-3.5 w-3.5" />
-        </button>
+        </Link>
       )}
     </div>
   );
 }
+
 
