@@ -99,6 +99,19 @@ function BudgetsPage() {
     toast.success("הקטגוריה נוספה");
   };
 
+  if (active) {
+    return (
+      <AppShell title={active.label} subtitle={`פירוט קטגוריה • ${hebrewMonth()}`}>
+        <CategoryDetailView
+          category={active}
+          onBack={() => setActive(null)}
+          onUpdate={(label, n) => { update(label, n); }}
+          onDelete={(label) => { remove(label); setActive(null); }}
+        />
+      </AppShell>
+    );
+  }
+
   return (
     <AppShell title="תקציבים" subtitle={`${hebrewMonth()} • ${gregorianMonth()}`}>
       <div className="space-y-6">
@@ -172,13 +185,6 @@ function BudgetsPage() {
         </Section>
       </div>
 
-      <CategoryDetailDialog
-        category={active}
-        onClose={() => setActive(null)}
-        onUpdate={update}
-        onDelete={remove}
-      />
-
       <NewCategoryDialog
         open={creating}
         onClose={() => setCreating(false)}
@@ -188,6 +194,7 @@ function BudgetsPage() {
     </AppShell>
   );
 }
+
 
 /* ===== Category detail with double-confirm edit ===== */
 function CategoryDetailDialog({
