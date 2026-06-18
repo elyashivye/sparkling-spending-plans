@@ -262,9 +262,9 @@ function Sidebar() {
       <div className="m-4 rounded-2xl bg-primary-soft p-4 text-center">
         <div className="text-sm font-bold text-primary">כל הכבוד! 🎉</div>
         <p className="mt-1 text-xs text-foreground/70">עמדתם בתקציב 3 חודשים ברצף</p>
-        <button className="mt-3 w-full rounded-xl bg-primary py-2 text-xs font-bold text-primary-foreground">
+        <Link to="/goals" className="mt-3 inline-block w-full rounded-xl bg-primary py-2 text-xs font-bold text-primary-foreground text-center">
           ראה הישגים
-        </button>
+        </Link>
       </div>
     </aside>
   );
@@ -282,29 +282,32 @@ function DesktopTopBar() {
             משפחת לוי <ChevronDown className="h-3 w-3" />
           </button>
         </div>
-        <div className="mr-4 flex items-center gap-2">
-          <NotificationsBell />
-          <IconBtn Icon={HelpCircle} />
-          <IconBtn Icon={Settings} />
-        </div>
       </div>
       <div className="min-w-0 text-center">
         <h1 className="truncate text-2xl font-extrabold">ברוך שובך, משפחת לוי ☀️</h1>
         <p className="text-sm text-muted-foreground">{bothDates()}</p>
       </div>
-      <div />
+      <div className="flex items-center gap-2 justify-self-end">
+        <NotificationsBell />
+        <IconBtn Icon={HelpCircle} to="/insights" />
+        <IconBtn Icon={Settings} to="/settings" />
+      </div>
     </header>
   );
 }
 
-function IconBtn({ Icon, dot }: { Icon: typeof Menu; dot?: boolean }) {
-  return (
-    <button className="relative grid h-10 w-10 place-items-center rounded-xl text-foreground/60 hover:bg-muted">
+function IconBtn({ Icon, dot, to }: { Icon: typeof Menu; dot?: boolean; to?: string }) {
+  const cls = "relative grid h-10 w-10 place-items-center rounded-xl text-foreground/60 hover:bg-muted";
+  const inner = (
+    <>
       <Icon className="h-5 w-5" />
       {dot && <span className="absolute top-2 left-2 h-2 w-2 rounded-full bg-destructive" />}
-    </button>
+    </>
   );
+  if (to) return <Link to={to} className={cls}>{inner}</Link>;
+  return <button className={cls}>{inner}</button>;
 }
+
 
 function DesktopGrid() {
   return (
