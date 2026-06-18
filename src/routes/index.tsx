@@ -262,9 +262,9 @@ function Sidebar() {
       <div className="m-4 rounded-2xl bg-primary-soft p-4 text-center">
         <div className="text-sm font-bold text-primary">כל הכבוד! 🎉</div>
         <p className="mt-1 text-xs text-foreground/70">עמדתם בתקציב 3 חודשים ברצף</p>
-        <button className="mt-3 w-full rounded-xl bg-primary py-2 text-xs font-bold text-primary-foreground">
+        <Link to="/goals" className="mt-3 inline-block w-full rounded-xl bg-primary py-2 text-xs font-bold text-primary-foreground text-center">
           ראה הישגים
-        </button>
+        </Link>
       </div>
     </aside>
   );
@@ -282,29 +282,32 @@ function DesktopTopBar() {
             משפחת לוי <ChevronDown className="h-3 w-3" />
           </button>
         </div>
-        <div className="mr-4 flex items-center gap-2">
-          <NotificationsBell />
-          <IconBtn Icon={HelpCircle} />
-          <IconBtn Icon={Settings} />
-        </div>
       </div>
       <div className="min-w-0 text-center">
         <h1 className="truncate text-2xl font-extrabold">ברוך שובך, משפחת לוי ☀️</h1>
         <p className="text-sm text-muted-foreground">{bothDates()}</p>
       </div>
-      <div />
+      <div className="flex items-center gap-2 justify-self-end">
+        <NotificationsBell />
+        <IconBtn Icon={HelpCircle} to="/insights" />
+        <IconBtn Icon={Settings} to="/settings" />
+      </div>
     </header>
   );
 }
 
-function IconBtn({ Icon, dot }: { Icon: typeof Menu; dot?: boolean }) {
-  return (
-    <button className="relative grid h-10 w-10 place-items-center rounded-xl text-foreground/60 hover:bg-muted">
+function IconBtn({ Icon, dot, to }: { Icon: typeof Menu; dot?: boolean; to?: string }) {
+  const cls = "relative grid h-10 w-10 place-items-center rounded-xl text-foreground/60 hover:bg-muted";
+  const inner = (
+    <>
       <Icon className="h-5 w-5" />
       {dot && <span className="absolute top-2 left-2 h-2 w-2 rounded-full bg-destructive" />}
-    </button>
+    </>
   );
+  if (to) return <Link to={to} className={cls}>{inner}</Link>;
+  return <button className={cls}>{inner}</button>;
 }
+
 
 function DesktopGrid() {
   return (
@@ -474,7 +477,7 @@ function Stat({ value, label, color, iconBg, iconColor, Icon }: {
 function BudgetCard() {
   return (
     <section className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 h-full">
-      <SectionHeader title="תקציב לפי קטגוריות" />
+      <SectionHeader title="תקציב לפי קטגוריות" to="/budgets" />
       <div className="hidden lg:grid mt-3 grid-cols-[1fr_1.2fr_2fr_auto] gap-4 px-1 text-xs font-semibold text-muted-foreground">
         <div>קטגוריה</div>
         <div className="text-center">הוצאתי</div>
@@ -568,7 +571,7 @@ function GoalCard({ goal, withImage }: { goal: typeof goals[number]; withImage?:
 function GoalsListCard() {
   return (
     <section className="rounded-3xl bg-card p-6 shadow-[var(--shadow-card)] h-full">
-      <SectionHeader title="יעדים וחסכונות" />
+      <SectionHeader title="יעדים וחסכונות" to="/goals" />
       <div className="mt-4 space-y-5">
         {goals.map((g) => {
           const pct = Math.round((g.current / g.goal) * 100);
@@ -586,9 +589,9 @@ function GoalsListCard() {
           );
         })}
       </div>
-      <button className="mt-5 w-full rounded-2xl border border-border py-2.5 text-sm font-bold text-foreground/70 hover:bg-muted">
+      <Link to="/goals" className="mt-5 block w-full rounded-2xl border border-border py-2.5 text-center text-sm font-bold text-foreground/70 hover:bg-muted">
         כל היעדים
-      </button>
+      </Link>
     </section>
   );
 }
@@ -642,7 +645,7 @@ function ForecastCard() {
 function RecentExpensesCard({ limit = 4 }: { limit?: number }) {
   return (
     <section className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 h-full">
-      <SectionHeader title="הוצאות אחרונות" />
+      <SectionHeader title="הוצאות אחרונות" to="/expenses" />
       <ul className="mt-3 divide-y divide-border">
         {recentExpenses.slice(0, limit).map((e) => (
           <li key={e.title} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 py-3">
@@ -679,23 +682,24 @@ function InsightsCard() {
           </li>
         ))}
       </ul>
-      <button className="mt-4 w-full rounded-2xl bg-primary py-2.5 text-sm font-bold text-primary-foreground hover:opacity-90">
+      <Link to="/insights" className="mt-4 block w-full rounded-2xl bg-primary py-2.5 text-center text-sm font-bold text-primary-foreground hover:opacity-90">
         כל התובנות
-      </button>
+      </Link>
     </section>
   );
 }
 
-function SectionHeader({ title, hideAction }: { title: string; hideAction?: boolean }) {
+function SectionHeader({ title, hideAction, to }: { title: string; hideAction?: boolean; to?: string }) {
   return (
     <div className="flex items-center justify-between">
       <h3 className="text-base font-bold sm:text-lg">{title}</h3>
-      {!hideAction && (
-        <button className="flex items-center gap-0.5 rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
+      {!hideAction && to && (
+        <Link to={to} className="flex items-center gap-0.5 rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
           <span>הצג הכל</span><ChevronLeft className="h-3.5 w-3.5" />
-        </button>
+        </Link>
       )}
     </div>
   );
 }
+
 
