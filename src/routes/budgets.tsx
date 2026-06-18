@@ -1,14 +1,47 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ShoppingCart, Car, Home, UtensilsCrossed, Baby, Plus, Sparkles, Pencil, Trash2, ChevronLeft, type LucideIcon } from "lucide-react";
+import { ShoppingCart, Car, Home, UtensilsCrossed, Baby, Plus, Sparkles, Pencil, Trash2, ChevronLeft, Fuel, Coffee, Receipt, type LucideIcon } from "lucide-react";
 import { AppShell, Section, Pill } from "@/components/app-shell";
-import { shekel, hebrewMonth, gregorianMonth } from "@/lib/hebrew-date";
+import { shekel, hebrewMonth, gregorianMonth, hebrewDate } from "@/lib/hebrew-date";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+
+type CatExpense = { id: number; title: string; amount: number; date: Date; Icon: LucideIcon };
+const dAgo = (n: number) => { const d = new Date(); d.setDate(d.getDate() - n); return d; };
+
+const expensesByCategory: Record<string, CatExpense[]> = {
+  "סופר וקניות": [
+    { id: 1, title: "שופרסל דיל", amount: 412, date: dAgo(0), Icon: ShoppingCart },
+    { id: 2, title: "ויקטורי", amount: 318, date: dAgo(3), Icon: ShoppingCart },
+    { id: 3, title: "רמי לוי", amount: 560, date: dAgo(7), Icon: ShoppingCart },
+    { id: 4, title: "אושר עד", amount: 240, date: dAgo(11), Icon: ShoppingCart },
+    { id: 5, title: "מחסני השוק", amount: 1270, date: dAgo(15), Icon: ShoppingCart },
+  ],
+  "רכב ותחבורה": [
+    { id: 1, title: "פז דלק", amount: 320, date: dAgo(1), Icon: Fuel },
+    { id: 2, title: "חניון רכבת", amount: 30, date: dAgo(4), Icon: Car },
+    { id: 3, title: "ביטוח רכב", amount: 300, date: dAgo(12), Icon: Car },
+  ],
+  "בית ומשק": [
+    { id: 1, title: "ארנונה", amount: 540, date: dAgo(5), Icon: Home },
+    { id: 2, title: "חשמל", amount: 210, date: dAgo(9), Icon: Home },
+  ],
+  "מסעדות ובילויים": [
+    { id: 1, title: "מסעדת קלאודיוס", amount: 380, date: dAgo(2), Icon: UtensilsCrossed },
+    { id: 2, title: "קפה לנדוור", amount: 48, date: dAgo(4), Icon: Coffee },
+    { id: 3, title: "ארומה", amount: 62, date: dAgo(6), Icon: Coffee },
+    { id: 4, title: "פיצה דומינו", amount: 110, date: dAgo(8), Icon: UtensilsCrossed },
+    { id: 5, title: "בר עומק", amount: 600, date: dAgo(14), Icon: UtensilsCrossed },
+  ],
+  "ילדים וחינוך": [
+    { id: 1, title: "חוג ג'ודו - איתי", amount: 280, date: dAgo(4), Icon: Baby },
+    { id: 2, title: "צהרון - נועה", amount: 420, date: dAgo(10), Icon: Baby },
+  ],
+};
 
 export const Route = createFileRoute("/budgets")({
   head: () => ({ meta: [{ title: "תקציבים - הכיס המשפחתי" }] }),
@@ -191,10 +224,10 @@ function CategoryDetailDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={(o) => !o && stop()}>
-        <DialogContent className="max-w-md rounded-3xl p-0 overflow-hidden gap-0" dir="rtl">
+        <DialogContent className="max-w-lg rounded-3xl p-0 overflow-hidden gap-0 max-h-[90vh] flex flex-col" dir="rtl">
           {b && (
             <>
-              <div className={`${b.bg} px-6 pt-8 pb-6 text-center relative`}>
+              <div className={`${b.bg} px-6 pt-8 pb-6 text-center relative shrink-0`}>
                 <button
                   onClick={stop}
                   className="absolute top-3 right-3 grid h-9 w-9 place-items-center rounded-xl text-foreground/60 hover:bg-card/60"
@@ -211,7 +244,7 @@ function CategoryDetailDialog({
                 </DialogDescription>
               </div>
 
-              <div className="space-y-4 px-6 py-5">
+              <div className="space-y-4 px-6 py-5 overflow-y-auto">
                 <div className="grid grid-cols-3 gap-2 text-center">
                   <Stat label="תקציב" value={shekel(b.budget)} />
                   <Stat label="הוצאה" value={shekel(b.spent)} />
@@ -224,7 +257,7 @@ function CategoryDetailDialog({
                       onClick={startEdit}
                       className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-primary py-2.5 text-sm font-bold text-primary-foreground hover:opacity-90"
                     >
-                      <Pencil className="h-4 w-4" /> ערוך תקציב
+                      <Pencil className="h-4 w-4" /> שינוי תקציב
                     </button>
                     <button
                       onClick={() => setConfirmingDelete(true)}
@@ -262,12 +295,16 @@ function CategoryDetailDialog({
                     </div>
                   </div>
                 )}
+
+                <CategoryExpenses category={b} />
               </div>
             </>
           )}
           <DialogFooter className="hidden" />
         </DialogContent>
       </Dialog>
+
+
 
       {/* Double confirmation - edit */}
       <AlertDialog open={confirmingEdit} onOpenChange={setConfirmingEdit}>
@@ -329,6 +366,44 @@ function Stat({ label, value, tone = "muted" }: { label: string; value: string; 
     <div className="rounded-2xl bg-muted/40 px-3 py-2.5">
       <div className="text-[10px] text-muted-foreground">{label}</div>
       <div className={`mt-0.5 text-sm font-extrabold ${toneCls}`}>{value}</div>
+    </div>
+  );
+}
+
+function CategoryExpenses({ category }: { category: B }) {
+  const items = expensesByCategory[category.label] ?? [];
+  const total = items.reduce((s, e) => s + e.amount, 0);
+  return (
+    <div className="rounded-2xl border border-border bg-card">
+      <div className="flex items-center justify-between px-4 pt-3.5 pb-2">
+        <div className="flex items-center gap-2">
+          <Receipt className="h-4 w-4 text-foreground/60" />
+          <h4 className="text-sm font-bold">הוצאות הקטגוריה</h4>
+        </div>
+        <span className="text-[11px] text-muted-foreground">
+          {items.length} פעולות • {shekel(total)}
+        </span>
+      </div>
+      {items.length === 0 ? (
+        <div className="px-4 pb-4 pt-1 text-center text-xs text-muted-foreground">
+          אין עדיין הוצאות בקטגוריה זו החודש
+        </div>
+      ) : (
+        <ul className="divide-y divide-border">
+          {items.map((e) => (
+            <li key={e.id} className="flex items-center gap-3 px-4 py-2.5">
+              <div className={`grid h-9 w-9 place-items-center rounded-xl ${category.bg}`}>
+                <e.Icon className={`h-4 w-4 ${category.ic}`} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-sm font-semibold">{e.title}</div>
+                <div className="text-[11px] text-muted-foreground">{hebrewDate(e.date)}</div>
+              </div>
+              <div className="text-sm font-extrabold">{shekel(e.amount)}</div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
