@@ -224,10 +224,10 @@ function CategoryDetailDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={(o) => !o && stop()}>
-        <DialogContent className="max-w-md rounded-3xl p-0 overflow-hidden gap-0" dir="rtl">
+        <DialogContent className="max-w-lg rounded-3xl p-0 overflow-hidden gap-0 max-h-[90vh] flex flex-col" dir="rtl">
           {b && (
             <>
-              <div className={`${b.bg} px-6 pt-8 pb-6 text-center relative`}>
+              <div className={`${b.bg} px-6 pt-8 pb-6 text-center relative shrink-0`}>
                 <button
                   onClick={stop}
                   className="absolute top-3 right-3 grid h-9 w-9 place-items-center rounded-xl text-foreground/60 hover:bg-card/60"
@@ -244,7 +244,7 @@ function CategoryDetailDialog({
                 </DialogDescription>
               </div>
 
-              <div className="space-y-4 px-6 py-5">
+              <div className="space-y-4 px-6 py-5 overflow-y-auto">
                 <div className="grid grid-cols-3 gap-2 text-center">
                   <Stat label="תקציב" value={shekel(b.budget)} />
                   <Stat label="הוצאה" value={shekel(b.spent)} />
@@ -257,7 +257,7 @@ function CategoryDetailDialog({
                       onClick={startEdit}
                       className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-primary py-2.5 text-sm font-bold text-primary-foreground hover:opacity-90"
                     >
-                      <Pencil className="h-4 w-4" /> ערוך תקציב
+                      <Pencil className="h-4 w-4" /> שינוי תקציב
                     </button>
                     <button
                       onClick={() => setConfirmingDelete(true)}
@@ -295,12 +295,16 @@ function CategoryDetailDialog({
                     </div>
                   </div>
                 )}
+
+                <CategoryExpenses category={b} />
               </div>
             </>
           )}
           <DialogFooter className="hidden" />
         </DialogContent>
       </Dialog>
+
+
 
       {/* Double confirmation - edit */}
       <AlertDialog open={confirmingEdit} onOpenChange={setConfirmingEdit}>
