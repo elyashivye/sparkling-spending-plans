@@ -477,7 +477,7 @@ function Stat({ value, label, color, iconBg, iconColor, Icon }: {
 function BudgetCard() {
   return (
     <section className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 h-full">
-      <SectionHeader title="תקציב לפי קטגוריות" />
+      <SectionHeader title="תקציב לפי קטגוריות" to="/budgets" />
       <div className="hidden lg:grid mt-3 grid-cols-[1fr_1.2fr_2fr_auto] gap-4 px-1 text-xs font-semibold text-muted-foreground">
         <div>קטגוריה</div>
         <div className="text-center">הוצאתי</div>
@@ -571,7 +571,7 @@ function GoalCard({ goal, withImage }: { goal: typeof goals[number]; withImage?:
 function GoalsListCard() {
   return (
     <section className="rounded-3xl bg-card p-6 shadow-[var(--shadow-card)] h-full">
-      <SectionHeader title="יעדים וחסכונות" />
+      <SectionHeader title="יעדים וחסכונות" to="/goals" />
       <div className="mt-4 space-y-5">
         {goals.map((g) => {
           const pct = Math.round((g.current / g.goal) * 100);
@@ -645,7 +645,7 @@ function ForecastCard() {
 function RecentExpensesCard({ limit = 4 }: { limit?: number }) {
   return (
     <section className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 h-full">
-      <SectionHeader title="הוצאות אחרונות" />
+      <SectionHeader title="הוצאות אחרונות" to="/expenses" />
       <ul className="mt-3 divide-y divide-border">
         {recentExpenses.slice(0, limit).map((e) => (
           <li key={e.title} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 py-3">
