@@ -682,9 +682,9 @@ function InsightsCard() {
           </li>
         ))}
       </ul>
-      <button className="mt-4 w-full rounded-2xl bg-primary py-2.5 text-sm font-bold text-primary-foreground hover:opacity-90">
+      <Link to="/insights" className="mt-4 block w-full rounded-2xl bg-primary py-2.5 text-center text-sm font-bold text-primary-foreground hover:opacity-90">
         כל התובנות
-      </button>
+      </Link>
     </section>
   );
 }
