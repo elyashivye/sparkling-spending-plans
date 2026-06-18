@@ -370,6 +370,44 @@ function Stat({ label, value, tone = "muted" }: { label: string; value: string; 
   );
 }
 
+function CategoryExpenses({ category }: { category: B }) {
+  const items = expensesByCategory[category.label] ?? [];
+  const total = items.reduce((s, e) => s + e.amount, 0);
+  return (
+    <div className="rounded-2xl border border-border bg-card">
+      <div className="flex items-center justify-between px-4 pt-3.5 pb-2">
+        <div className="flex items-center gap-2">
+          <Receipt className="h-4 w-4 text-foreground/60" />
+          <h4 className="text-sm font-bold">הוצאות הקטגוריה</h4>
+        </div>
+        <span className="text-[11px] text-muted-foreground">
+          {items.length} פעולות • {shekel(total)}
+        </span>
+      </div>
+      {items.length === 0 ? (
+        <div className="px-4 pb-4 pt-1 text-center text-xs text-muted-foreground">
+          אין עדיין הוצאות בקטגוריה זו החודש
+        </div>
+      ) : (
+        <ul className="divide-y divide-border">
+          {items.map((e) => (
+            <li key={e.id} className="flex items-center gap-3 px-4 py-2.5">
+              <div className={`grid h-9 w-9 place-items-center rounded-xl ${category.bg}`}>
+                <e.Icon className={`h-4 w-4 ${category.ic}`} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-sm font-semibold">{e.title}</div>
+                <div className="text-[11px] text-muted-foreground">{hebrewDate(e.date)}</div>
+              </div>
+              <div className="text-sm font-extrabold">{shekel(e.amount)}</div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 /* ===== Create new category ===== */
 function NewCategoryDialog({
   open, onClose, onCreate, existing,
