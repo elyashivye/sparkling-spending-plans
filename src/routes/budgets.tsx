@@ -1,14 +1,47 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ShoppingCart, Car, Home, UtensilsCrossed, Baby, Plus, Sparkles, Pencil, Trash2, ChevronLeft, type LucideIcon } from "lucide-react";
+import { ShoppingCart, Car, Home, UtensilsCrossed, Baby, Plus, Sparkles, Pencil, Trash2, ChevronLeft, Fuel, Coffee, Receipt, type LucideIcon } from "lucide-react";
 import { AppShell, Section, Pill } from "@/components/app-shell";
-import { shekel, hebrewMonth, gregorianMonth } from "@/lib/hebrew-date";
+import { shekel, hebrewMonth, gregorianMonth, hebrewDate } from "@/lib/hebrew-date";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+
+type CatExpense = { id: number; title: string; amount: number; date: Date; Icon: LucideIcon };
+const dAgo = (n: number) => { const d = new Date(); d.setDate(d.getDate() - n); return d; };
+
+const expensesByCategory: Record<string, CatExpense[]> = {
+  "סופר וקניות": [
+    { id: 1, title: "שופרסל דיל", amount: 412, date: dAgo(0), Icon: ShoppingCart },
+    { id: 2, title: "ויקטורי", amount: 318, date: dAgo(3), Icon: ShoppingCart },
+    { id: 3, title: "רמי לוי", amount: 560, date: dAgo(7), Icon: ShoppingCart },
+    { id: 4, title: "אושר עד", amount: 240, date: dAgo(11), Icon: ShoppingCart },
+    { id: 5, title: "מחסני השוק", amount: 1270, date: dAgo(15), Icon: ShoppingCart },
+  ],
+  "רכב ותחבורה": [
+    { id: 1, title: "פז דלק", amount: 320, date: dAgo(1), Icon: Fuel },
+    { id: 2, title: "חניון רכבת", amount: 30, date: dAgo(4), Icon: Car },
+    { id: 3, title: "ביטוח רכב", amount: 300, date: dAgo(12), Icon: Car },
+  ],
+  "בית ומשק": [
+    { id: 1, title: "ארנונה", amount: 540, date: dAgo(5), Icon: Home },
+    { id: 2, title: "חשמל", amount: 210, date: dAgo(9), Icon: Home },
+  ],
+  "מסעדות ובילויים": [
+    { id: 1, title: "מסעדת קלאודיוס", amount: 380, date: dAgo(2), Icon: UtensilsCrossed },
+    { id: 2, title: "קפה לנדוור", amount: 48, date: dAgo(4), Icon: Coffee },
+    { id: 3, title: "ארומה", amount: 62, date: dAgo(6), Icon: Coffee },
+    { id: 4, title: "פיצה דומינו", amount: 110, date: dAgo(8), Icon: UtensilsCrossed },
+    { id: 5, title: "בר עומק", amount: 600, date: dAgo(14), Icon: UtensilsCrossed },
+  ],
+  "ילדים וחינוך": [
+    { id: 1, title: "חוג ג'ודו - איתי", amount: 280, date: dAgo(4), Icon: Baby },
+    { id: 2, title: "צהרון - נועה", amount: 420, date: dAgo(10), Icon: Baby },
+  ],
+};
 
 export const Route = createFileRoute("/budgets")({
   head: () => ({ meta: [{ title: "תקציבים - הכיס המשפחתי" }] }),
