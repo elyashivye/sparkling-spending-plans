@@ -589,9 +589,9 @@ function GoalsListCard() {
           );
         })}
       </div>
-      <button className="mt-5 w-full rounded-2xl border border-border py-2.5 text-sm font-bold text-foreground/70 hover:bg-muted">
+      <Link to="/goals" className="mt-5 block w-full rounded-2xl border border-border py-2.5 text-center text-sm font-bold text-foreground/70 hover:bg-muted">
         כל היעדים
-      </button>
+      </Link>
     </section>
   );
 }
