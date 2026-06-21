@@ -194,13 +194,16 @@ function MobileTopBar({ title, subtitle }: { title: string; subtitle?: string })
   );
 }
 
-function IconBtn({ Icon, dot }: { Icon: LucideIcon; dot?: boolean }) {
-  return (
-    <button className="relative grid h-10 w-10 place-items-center rounded-xl text-foreground/60 hover:bg-muted">
+function IconBtn({ Icon, dot, to }: { Icon: LucideIcon; dot?: boolean; to?: string }) {
+  const cls = "relative grid h-10 w-10 place-items-center rounded-xl text-foreground/60 hover:bg-muted";
+  const inner = (
+    <>
       <Icon className="h-5 w-5" />
       {dot && <span className="absolute top-2 left-2 h-2 w-2 rounded-full bg-destructive" />}
-    </button>
+    </>
   );
+  if (to) return <Link to={to} className={cls}>{inner}</Link>;
+  return <button className={cls}>{inner}</button>;
 }
 
 function MobileBottomNav() {
