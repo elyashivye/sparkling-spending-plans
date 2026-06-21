@@ -3,6 +3,7 @@ import { useState } from "react";
 import { User, Bell, Shield, CreditCard, Globe, Moon, LogOut, ChevronLeft, Users, Calendar, type LucideIcon } from "lucide-react";
 import { AppShell, Section } from "@/components/app-shell";
 import coupleImg from "@/assets/couple-avatar.png";
+import { useTheme } from "@/lib/theme";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({ meta: [{ title: "הגדרות - הכיס המשפחתי" }] }),
@@ -11,7 +12,7 @@ export const Route = createFileRoute("/settings")({
 
 function SettingsPage() {
   const [notif, setNotif] = useState(true);
-  const [dark, setDark] = useState(false);
+  const { isDark, toggle } = useTheme();
   const [hebDate, setHebDate] = useState(true);
 
   return (
@@ -39,7 +40,7 @@ function SettingsPage() {
             <div className="divide-y divide-border">
               <Toggle Icon={Bell} title="התראות חכמות" sub="קבלו תזכורות ותובנות חודשיות" value={notif} onChange={setNotif} />
               <Toggle Icon={Calendar} title="הצגת תאריך עברי" sub="הצגה כפולה של תאריך לועזי + עברי" value={hebDate} onChange={setHebDate} />
-              <Toggle Icon={Moon} title="מצב כהה" sub="עיצוב נעים לעיניים בלילה" value={dark} onChange={setDark} />
+              <Toggle Icon={Moon} title="מצב כהה" sub="עיצוב נעים לעיניים בלילה" value={isDark} onChange={toggle} />
               <Row Icon={Globe} title="שפה ואזור" sub="עברית • ₪ שקל ישראלי" />
             </div>
           </Section>
