@@ -15,11 +15,14 @@ import {
   ClipboardList,
   Lightbulb,
   Heart,
+  Moon,
+  Sun,
   type LucideIcon,
 } from "lucide-react";
 import { type ReactNode } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { NotificationsBell } from "@/components/notifications";
+import { useTheme } from "@/lib/theme";
 import coupleImg from "@/assets/couple-avatar.png";
 import { bothDates } from "@/lib/hebrew-date";
 import { FloatingAdd } from "@/components/quick-add";
@@ -119,6 +122,7 @@ function Sidebar() {
 export const mobileBottomTos = new Set(["/income", "/expenses", "/", "/reports", "/goals"]);
 
 function DesktopTopBar({ title, subtitle }: { title: string; subtitle?: string }) {
+  const { isDark, toggle } = useTheme();
   return (
     <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 border-b border-border bg-card px-8 py-4">
       <div className="flex items-center gap-3">
@@ -129,17 +133,19 @@ function DesktopTopBar({ title, subtitle }: { title: string; subtitle?: string }
             משפחת לוי <ChevronDown className="h-3 w-3" />
           </button>
         </div>
-        <div className="mr-4 flex items-center gap-2">
-          <NotificationsBell />
-          <IconBtn Icon={HelpCircle} />
-          <IconBtn Icon={Settings} />
-        </div>
       </div>
       <div className="min-w-0 text-center">
         <h1 className="truncate text-2xl font-extrabold">{title}</h1>
         <p className="text-sm text-muted-foreground">{subtitle ?? bothDates()}</p>
       </div>
-      <div />
+      <div className="flex items-center gap-2 justify-self-end">
+        <NotificationsBell />
+        <button onClick={toggle} aria-label="מצב כהה" className="grid h-10 w-10 place-items-center rounded-xl text-foreground/60 hover:bg-muted">
+          {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+        </button>
+        <IconBtn Icon={HelpCircle} to="/insights" />
+        <IconBtn Icon={Settings} to="/settings" />
+      </div>
     </header>
   );
 }
