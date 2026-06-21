@@ -1,8 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { bothDates, hebrewMonth, gregorianMonth } from "@/lib/hebrew-date";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { hebrewMonth, gregorianMonth } from "@/lib/hebrew-date";
 import {
-  Menu,
   Wallet,
   PiggyBank,
   CalendarDays,
@@ -15,29 +13,19 @@ import {
   TrendingUp,
   Fuel,
   Coffee,
-  
   ChevronLeft,
   ChevronDown,
-  BarChart3,
-  Receipt,
-  ArrowUpCircle,
-  HelpCircle,
-  Settings,
-  WalletCards,
   CalendarCheck,
-  ClipboardList,
-  Lightbulb,
+  WalletCards,
   Trophy,
   Heart,
   Sparkles,
   Zap,
 } from "lucide-react";
 
-import { FloatingAdd } from "@/components/quick-add";
-import { NotificationsBell } from "@/components/notifications";
+import { AppShell } from "@/components/app-shell";
 import houseImg from "@/assets/house-3d.png";
 import suitcaseImg from "@/assets/suitcase-3d.png";
-import coupleImg from "@/assets/couple-avatar.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -87,257 +75,41 @@ const insights = [
   { text: "חסכתם החודש 1,240 ₪ יותר מהחודש שעבר! כל הכבוד 🏆", Icon: Trophy, color: "text-warning", bg: "bg-warning-soft" },
 ];
 
-const navItems = [
-  { label: "בית", to: "/", Icon: Home, active: true },
-  { label: "הוצאות", to: "/expenses", Icon: Receipt },
-  { label: "הכנסות", to: "/income", Icon: ArrowUpCircle },
-  { label: "תקציבים", to: "/budgets", Icon: Target },
-  { label: "תזרים", to: "/cashflow", Icon: TrendingUp },
-  { label: "יעדים וחסכונות", to: "/goals", Icon: Heart },
-  { label: "מנויים וקבועים", to: "/subscriptions", Icon: ClipboardList },
-  { label: "דוחות", to: "/reports", Icon: BarChart3 },
-  { label: "תובנות", to: "/insights", Icon: Lightbulb },
-  { label: "הגדרות", to: "/settings", Icon: Settings },
-] as const;
-
 function nf(n: number) {
   return n.toLocaleString("he-IL");
 }
 
 function Index() {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Mobile layout */}
-      <div className="lg:hidden pb-28">
-        <MobileLayout />
-      </div>
-
-      {/* Desktop layout */}
-      <div className="hidden lg:flex min-h-screen">
-        <Sidebar />
-        <main className="flex-1 min-w-0">
-          <DesktopTopBar />
-          <div className="px-8 py-6">
-            <DesktopGrid />
+    <AppShell
+      title="ברוך שובך, משפחת לוי ☀️"
+      mobileChildren={
+        <div className="space-y-6">
+          <FreeMoneyCard />
+          <BudgetCard />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <GoalCard goal={goals[0]} withImage />
+            <ForecastCard />
           </div>
-        </main>
-      </div>
-
-      {/* Floating + button - both layouts */}
-      <FloatingAdd />
-    </div>
-  );
-}
-
-/* =================== MOBILE =================== */
-function MobileLayout() {
-  return (
-    <div className="mx-auto w-full max-w-[600px] px-4 pt-6 space-y-6">
-      <MobileTopBar />
-      <FreeMoneyCard />
-      <BudgetCard />
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <GoalCard goal={goals[0]} withImage />
-        <ForecastCard />
-      </div>
-      <RecentExpensesCard limit={3} />
-      <MobileBottomNav />
-    </div>
-  );
-}
-
-function MobileTopBar() {
-  const bottomTos = new Set(["/income", "/expenses", "/reports", "/goals"]);
-  const extras = navItems.filter((n) => !bottomTos.has(n.to));
-  return (
-    <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
-      <div className="flex items-center gap-2">
-        <NotificationsBell />
-        <img src={coupleImg} alt="משפחת לוי" width={44} height={44}
-          className="h-11 w-11 shrink-0 rounded-full object-cover ring-2 ring-card shadow-[var(--shadow-card)]" />
-      </div>
-      <div className="min-w-0 text-center">
-        <h1 className="truncate text-xl font-extrabold">בוקר טוב ☀️</h1>
-        <p className="truncate text-xs text-muted-foreground">
-          כיף לראות שאתם כאן שוב <span className="text-primary">💜</span>
-        </p>
-      </div>
-      <Sheet>
-        <SheetTrigger asChild>
-          <button className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-card shadow-[var(--shadow-card)]">
-            <Menu className="h-5 w-5 text-foreground/70" />
-          </button>
-        </SheetTrigger>
-        <SheetContent side="right" className="w-[88%] max-w-[360px] p-0 flex flex-col">
-          <SheetHeader className="border-b border-border px-5 py-4 text-right">
-            <SheetTitle className="flex items-center gap-2 text-base font-extrabold">
-              <div className="grid h-9 w-9 place-items-center rounded-2xl bg-primary-soft">
-                <WalletCards className="h-4 w-4 text-primary" />
-              </div>
-              הכיס המשפחתי
-            </SheetTitle>
-          </SheetHeader>
-          <div className="flex items-center gap-3 border-b border-border px-5 py-4">
-            <img src={coupleImg} alt="" className="h-11 w-11 rounded-full object-cover" />
-            <div className="leading-tight">
-              <div className="text-[11px] text-muted-foreground">משפחת</div>
-              <div className="text-sm font-bold">משפחת לוי</div>
-            </div>
-          </div>
-          <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-1">
-            {extras.map((item) => (
-              <Link key={item.to} to={item.to}
-                activeOptions={{ exact: true }}
-                className="flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-foreground/75 hover:bg-muted data-[status=active]:bg-primary-soft data-[status=active]:text-primary">
-                <span>{item.label}</span>
-                <item.Icon className="h-4 w-4" />
-              </Link>
-            ))}
-          </nav>
-          <div className="m-4 rounded-2xl bg-primary-soft p-4 text-center">
-            <div className="text-sm font-bold text-primary">כל הכבוד! 🎉</div>
-            <p className="mt-1 text-xs text-foreground/70">עמדתם בתקציב 3 חודשים ברצף</p>
-          </div>
-        </SheetContent>
-      </Sheet>
-    </header>
-  );
-}
-
-function MobileBottomNav() {
-  const items = [
-    { label: "הכנסות", to: "/income", Icon: Wallet },
-    { label: "הוצאות", to: "/expenses", Icon: Receipt },
-    { label: "בית", to: "/", Icon: Home, active: true },
-    { label: "דוחות", to: "/reports", Icon: BarChart3 },
-    { label: "יעדים", to: "/goals", Icon: Target },
-  ] as const;
-  return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 lg:hidden">
-      <div className="mx-auto max-w-[600px] px-4 pb-3">
-        <div className="rounded-t-3xl bg-card pt-3 pb-2 shadow-[0_-10px_30px_-10px_oklch(0.5_0.1_270/0.15)]">
-          <div className="grid grid-cols-5 items-end">
-            {items.map((it, i) => (
-              <Link key={it.to} to={it.to} className="flex flex-col items-center gap-1 text-xs">
-                {i === 2 ? (
-                  <>
-                    <div className="h-6" />
-                    <span className="mt-1 font-bold text-primary">{it.label}</span>
-                  </>
-                ) : (
-                  <>
-                    <it.Icon className={`h-5 w-5 ${"active" in it ? "text-primary" : "text-muted-foreground"}`} />
-                    <span className={"active" in it ? "font-bold text-primary" : "text-muted-foreground"}>{it.label}</span>
-                  </>
-                )}
-              </Link>
-            ))}
-          </div>
+          <RecentExpensesCard limit={3} />
         </div>
-      </div>
-    </nav>
+      }
+    >
+      <DesktopGrid />
+    </AppShell>
   );
 }
-
-/* =================== DESKTOP =================== */
-function Sidebar() {
-  return (
-    <aside className="sticky top-0 h-screen w-64 shrink-0 border-l border-border bg-card flex flex-col">
-      <div className="flex items-center gap-2 px-6 py-5 border-b border-border">
-        <div className="grid h-10 w-10 place-items-center rounded-2xl bg-primary-soft">
-          <WalletCards className="h-5 w-5 text-primary" />
-        </div>
-        <h2 className="text-lg font-extrabold">הכיס המשפחתי</h2>
-      </div>
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navItems.map((item) => (
-          <Link key={item.to} to={item.to}
-            activeOptions={{ exact: true }}
-            className="flex items-center justify-between gap-3 rounded-2xl px-4 py-2.5 text-sm font-semibold transition text-foreground/70 hover:bg-muted data-[status=active]:bg-primary-soft data-[status=active]:text-primary">
-            <span>{item.label}</span>
-            <item.Icon className="h-4 w-4" />
-          </Link>
-        ))}
-      </nav>
-      <div className="m-4 rounded-2xl bg-primary-soft p-4 text-center">
-        <div className="text-sm font-bold text-primary">כל הכבוד! 🎉</div>
-        <p className="mt-1 text-xs text-foreground/70">עמדתם בתקציב 3 חודשים ברצף</p>
-        <Link to="/goals" className="mt-3 inline-block w-full rounded-xl bg-primary py-2 text-xs font-bold text-primary-foreground text-center">
-          ראה הישגים
-        </Link>
-      </div>
-    </aside>
-  );
-}
-
-function DesktopTopBar() {
-  return (
-    <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 border-b border-border bg-card px-8 py-4">
-      <div className="flex items-center gap-3">
-        <img src={coupleImg} alt="משפחת לוי" width={44} height={44}
-          className="h-11 w-11 rounded-full object-cover" />
-        <div className="leading-tight">
-          <div className="text-xs text-muted-foreground">👋 היי</div>
-          <button className="flex items-center gap-1 text-sm font-bold">
-            משפחת לוי <ChevronDown className="h-3 w-3" />
-          </button>
-        </div>
-      </div>
-      <div className="min-w-0 text-center">
-        <h1 className="truncate text-2xl font-extrabold">ברוך שובך, משפחת לוי ☀️</h1>
-        <p className="text-sm text-muted-foreground">{bothDates()}</p>
-      </div>
-      <div className="flex items-center gap-2 justify-self-end">
-        <NotificationsBell />
-        <IconBtn Icon={HelpCircle} to="/insights" />
-        <IconBtn Icon={Settings} to="/settings" />
-      </div>
-    </header>
-  );
-}
-
-function IconBtn({ Icon, dot, to }: { Icon: typeof Menu; dot?: boolean; to?: string }) {
-  const cls = "relative grid h-10 w-10 place-items-center rounded-xl text-foreground/60 hover:bg-muted";
-  const inner = (
-    <>
-      <Icon className="h-5 w-5" />
-      {dot && <span className="absolute top-2 left-2 h-2 w-2 rounded-full bg-destructive" />}
-    </>
-  );
-  if (to) return <Link to={to} className={cls}>{inner}</Link>;
-  return <button className={cls}>{inner}</button>;
-}
-
 
 function DesktopGrid() {
   return (
     <div className="grid gap-6 grid-cols-12">
-      {/* Row 1 */}
-      <div className="col-span-4">
-        <HealthCard />
-      </div>
-      <div className="col-span-8">
-        <FreeMoneyDesktop />
-      </div>
-
-      {/* Row 2 */}
-      <div className="col-span-4">
-        <ForecastCard />
-      </div>
-      <div className="col-span-8">
-        <BudgetCard />
-      </div>
-
-      {/* Row 3 */}
-      <div className="col-span-4">
-        <GoalsListCard />
-      </div>
-      <div className="col-span-4">
-        <RecentExpensesCard limit={4} />
-      </div>
-      <div className="col-span-4">
-        <InsightsCard />
-      </div>
+      <div className="col-span-4"><HealthCard /></div>
+      <div className="col-span-8"><FreeMoneyDesktop /></div>
+      <div className="col-span-4"><ForecastCard /></div>
+      <div className="col-span-8"><BudgetCard /></div>
+      <div className="col-span-4"><GoalsListCard /></div>
+      <div className="col-span-4"><RecentExpensesCard limit={4} /></div>
+      <div className="col-span-4"><InsightsCard /></div>
     </div>
   );
 }
@@ -355,8 +127,8 @@ function HealthCard() {
       <div className="mt-4 grid place-items-center">
         <div className="relative h-36 w-36">
           <svg viewBox="0 0 140 140" className="h-full w-full -rotate-90">
-            <circle cx="70" cy="70" r="60" stroke="oklch(0.93 0.02 295)" strokeWidth="12" fill="none" />
-            <circle cx="70" cy="70" r="60" stroke="oklch(0.62 0.21 295)" strokeWidth="12" fill="none"
+            <circle cx="70" cy="70" r="60" stroke="var(--color-muted)" strokeWidth="12" fill="none" />
+            <circle cx="70" cy="70" r="60" stroke="var(--color-primary)" strokeWidth="12" fill="none"
               strokeDasharray={C} strokeDashoffset={C * (1 - pct)} strokeLinecap="round" />
           </svg>
           <div className="absolute inset-0 grid place-items-center text-center">
@@ -403,7 +175,6 @@ function FreeMoneyDesktop() {
   );
 }
 
-/* Cute pastel decorative background for hero cards */
 function CuteBg() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl">
@@ -428,7 +199,6 @@ function StatTile({ value, label, color, Icon, iconBg, iconColor }: {
   );
 }
 
-/* ---------- Free money mobile card ---------- */
 function FreeMoneyCard() {
   return (
     <section className="relative overflow-hidden rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
@@ -473,7 +243,6 @@ function Stat({ value, label, color, iconBg, iconColor, Icon }: {
   );
 }
 
-/* ---------- Budget Card (works for both) ---------- */
 function BudgetCard() {
   return (
     <section className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 h-full">
@@ -497,7 +266,6 @@ function BudgetItem({ label, spent, budget, color, iconBg, iconColor, Icon }: Bu
   const diff = budget - spent;
   return (
     <>
-      {/* Mobile */}
       <div className="lg:hidden grid grid-cols-[auto_minmax(0,1fr)] items-center gap-4 py-4">
         <div className="flex items-center gap-3">
           <div className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl ${iconBg}`}>
@@ -518,7 +286,6 @@ function BudgetItem({ label, spent, budget, color, iconBg, iconColor, Icon }: Bu
         </div>
       </div>
 
-      {/* Desktop */}
       <div className="hidden lg:grid grid-cols-[1fr_1.2fr_2fr_auto] items-center gap-4 py-3.5">
         <div className="flex items-center gap-3">
           <div className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl ${iconBg}`}>
@@ -544,7 +311,6 @@ function BudgetItem({ label, spent, budget, color, iconBg, iconColor, Icon }: Bu
   );
 }
 
-/* ---------- Goal Cards ---------- */
 function GoalCard({ goal, withImage }: { goal: typeof goals[number]; withImage?: boolean }) {
   const pct = Math.round((goal.current / goal.goal) * 100);
   return (
@@ -596,7 +362,6 @@ function GoalsListCard() {
   );
 }
 
-/* ---------- Forecast ---------- */
 function ForecastCard() {
   const points = [20, 35, 28, 50, 42, 55, 38, 60, 52, 64];
   const max = Math.max(...points), min = Math.min(...points);
@@ -623,16 +388,16 @@ function ForecastCard() {
         <svg viewBox={`0 0 ${W} ${H}`} className="h-28 w-full" preserveAspectRatio="none">
           <defs>
             <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="oklch(0.62 0.21 295)" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="oklch(0.62 0.21 295)" stopOpacity="0" />
+              <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0" />
             </linearGradient>
           </defs>
           <path d={`${path} L ${W} ${H} L 0 ${H} Z`} fill="url(#g)" />
-          <path d={path} fill="none" stroke="oklch(0.62 0.21 295)" strokeWidth="2.5" strokeLinecap="round" />
+          <path d={path} fill="none" stroke="var(--color-primary)" strokeWidth="2.5" strokeLinecap="round" />
           {points.map((p, i) => {
             const x = i * step;
             const y = H - ((p - min) / (max - min || 1)) * (H - 20) - 10;
-            return <circle key={i} cx={x} cy={y} r={3} fill="oklch(0.62 0.21 295)" />;
+            return <circle key={i} cx={x} cy={y} r={3} fill="var(--color-primary)" />;
           })}
         </svg>
       </div>
@@ -641,7 +406,6 @@ function ForecastCard() {
   );
 }
 
-/* ---------- Recent Expenses ---------- */
 function RecentExpensesCard({ limit = 4 }: { limit?: number }) {
   return (
     <section className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 h-full">
@@ -667,7 +431,6 @@ function RecentExpensesCard({ limit = 4 }: { limit?: number }) {
   );
 }
 
-/* ---------- Insights ---------- */
 function InsightsCard() {
   return (
     <section className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 h-full">
@@ -701,5 +464,3 @@ function SectionHeader({ title, hideAction, to }: { title: string; hideAction?: 
     </div>
   );
 }
-
-
